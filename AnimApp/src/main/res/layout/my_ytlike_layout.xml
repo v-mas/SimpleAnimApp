@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:id="@+id/yt_top"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@android:color/holo_red_dark"
+        />
+
+    <FrameLayout
+        android:id="@+id/yt_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_blue_dark"
+        android:layout_marginTop="150dp" />
+
+</RelativeLayout>

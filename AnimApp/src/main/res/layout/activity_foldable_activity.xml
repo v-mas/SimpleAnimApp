@@ -1,0 +1,12 @@
+<com.concisesoftware.myanimationsapplication.animapp.widgets.MyFoldableListLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/foldablelatyout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    tools:context="com.concisesoftware.myanimationsapplication.animapp.FoldableActivity">
+
+</com.concisesoftware.myanimationsapplication.animapp.widgets.MyFoldableListLayout>

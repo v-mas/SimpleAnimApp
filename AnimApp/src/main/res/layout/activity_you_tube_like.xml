@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/yt_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    tools:context="com.concisesoftware.myanimationsapplication.animapp.YouTubeLikeActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/yt_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="60dp"
+        android:text="Show overlay"
+        android:textSize="25sp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

@@ -5,6 +5,8 @@
       <root url="file://$PROJECT_DIR$/AnimApp/build/exploded-aar/com.alexvasilkov/foldable-layout/1.0.1/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/foldable-layout-1.0.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

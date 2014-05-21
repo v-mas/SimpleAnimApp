@@ -31,6 +31,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
+        <activity
+            android:name="com.concisesoftware.myanimationsapplication.animapp.SlidingFromBottomMenuActivity"
+            android:label="@string/title_activity_sliding_from_bottom_menu" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -4,8 +4,9 @@
     <string name="app_name">MyAnimationsApplication</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_foldable_activity">FoldableActivity</string>
-    <string name="title_activity_you_tube_like">YouTubeLikeActivity</string>
-    <string name="title_activity_slide_from_right">SlideFromRightActivity</string>
+    <string name="title_activity_foldable_activity">Paper fold</string>
+    <string name="title_activity_you_tube_like">YouTube looks like</string>
+    <string name="title_activity_slide_from_right">Slide in from right</string>
+    <string name="title_activity_sliding_from_bottom_menu">Sliding menu from bottom</string>
 
 </resources>

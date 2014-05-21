@@ -2,7 +2,9 @@ package com.concisesoftware.myanimationsapplication.animapp;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.GridLayout;
 
 import com.concisesoftware.myanimationsapplication.animapp.animations.SlideInFromRightAnimation;
@@ -23,7 +25,8 @@ public class SlideFromRightActivity extends Activity {
         layout.setColumnCount(5);
 
         final Random random = new Random(System.currentTimeMillis());
-//        final DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
 
         layout.post(new Runnable() {
             @Override
@@ -32,7 +35,7 @@ public class SlideFromRightActivity extends Activity {
                 int width = (int) (layout.getWidth()/5.0f);
                 for (int i=0; i<55; i++) {
                     final View v = new View(SlideFromRightActivity.this);
-                    v.setVisibility(View.INVISIBLE);
+//                    v.setVisibility(View.INVISIBLE);
                     int color = random.nextInt() | 0xFF000000 ; //full visible
                     v.setBackgroundColor(color);
                     GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
@@ -42,13 +45,9 @@ public class SlideFromRightActivity extends Activity {
                     layout.addView(v);
 
                     final int offset = 70*(i%layout.getColumnCount())+50*(i/layout.getColumnCount());
-                    v.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SlideInFromRightAnimation(v, 1000, v.getX(), offset).start();
-                            v.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    Animation a = new SlideInFromRightAnimation(SlideFromRightActivity.this, 1000, offset);
+                    v.startAnimation(a);
+//                    v.setVisibility(View.VISIBLE);
                 }
             }
         });

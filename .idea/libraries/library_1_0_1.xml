@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/AnimApp/build/exploded-aar/com.sothree.slidinguppanel/library/1.0.1/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/library-1.0.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

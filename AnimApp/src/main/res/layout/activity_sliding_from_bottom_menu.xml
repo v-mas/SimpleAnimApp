@@ -1,16 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    style="@style/AppThemeWithBottomMenu"
+    sothree:panelHeight="68dp"
+    sothree:shadowHeight="10dp"
     tools:context="com.concisesoftware.myanimationsapplication.animapp.SlidingFromBottomMenuActivity">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/sliding_from_bottom_main" />
 
-</RelativeLayout>
+    <include layout="@layout/sliding_from_bottom_view" />
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

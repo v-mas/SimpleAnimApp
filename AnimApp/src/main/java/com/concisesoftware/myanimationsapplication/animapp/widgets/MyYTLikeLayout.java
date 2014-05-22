@@ -17,7 +17,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 /**
  * Created by concisecomp on 2014-05-13.
  */
-public class MyYTLikeLayout extends RelativeLayout {
+public class MyYTLikeLayout extends FrameLayout {
     public MyYTLikeLayout(Context context) {
         super(context);
         init(context);

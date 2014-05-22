@@ -3,6 +3,7 @@ package com.concisesoftware.myanimationsapplication.animapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -34,8 +35,10 @@ public class SlidingFromBottomMenuActivity extends Activity {
         insideMenuLayout.setOrientation(LinearLayout.VERTICAL);
 
         scrollView.addView(insideMenuLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        menuLayout.addView(scrollView);
 
         layout.expandPane();
+        layout.setAnchorPoint(0.5f);
         layout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -46,6 +49,7 @@ public class SlidingFromBottomMenuActivity extends Activity {
             public void onPanelCollapsed(View panel) {
                 TextView tv = new TextView(SlidingFromBottomMenuActivity.this);
                 tv.setText("panel collapsed");
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 insideMenuLayout.addView(tv);
                 Log.d(TAG, "panel collapse");
             }
@@ -54,6 +58,7 @@ public class SlidingFromBottomMenuActivity extends Activity {
             public void onPanelExpanded(View panel) {
                 TextView tv = new TextView(SlidingFromBottomMenuActivity.this);
                 tv.setText("panel expanded");
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 insideMenuLayout.addView(tv);
                 Log.d(TAG, "panel expand");
             }
@@ -62,6 +67,7 @@ public class SlidingFromBottomMenuActivity extends Activity {
             public void onPanelAnchored(View panel) {
                 TextView tv = new TextView(SlidingFromBottomMenuActivity.this);
                 tv.setText("panel anchored");
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 insideMenuLayout.addView(tv);
                 Log.d(TAG, "panel anchored");
             }

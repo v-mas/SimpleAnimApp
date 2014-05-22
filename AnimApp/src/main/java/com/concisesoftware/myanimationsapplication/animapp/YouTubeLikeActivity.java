@@ -5,16 +5,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.MediaController;
-import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 import com.concisesoftware.myanimationsapplication.animapp.widgets.MyYTLikeLayout;
+import com.concisesoftware.myanimationsapplication.animapp.widgets.YTLikeSecond;
 
 
 public class YouTubeLikeActivity extends Activity {
@@ -22,6 +19,7 @@ public class YouTubeLikeActivity extends Activity {
     private final static String APP_TAG = "YTlike";
 
     MyYTLikeLayout ytOverlay;
+    YTLikeSecond ytOverlaySecond;
 
     Context mContext;
 
@@ -40,40 +38,48 @@ public class YouTubeLikeActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(ytOverlaySecond != null) {
+                    ((ViewGroup)ytOverlaySecond.getParent()).removeView(ytOverlaySecond);
+                    ytOverlaySecond = null;
+                }
                 if(ytOverlay == null) {
                     ytOverlay = new MyYTLikeLayout(mContext);
 
-                    RelativeLayout topLayout = (RelativeLayout) inflater.inflate(R.layout.video_holder, null);
-                    VideoView vv = (VideoView) topLayout.findViewById(R.id.video);
-                    MediaController controller = new MediaController(mContext);
-                    vv.setMediaController(controller);
-                    Log.d(APP_TAG, "VideoView creation time:"+System.currentTimeMillis());
-                    vv.setVideoPath("http://redbullflow-staging.herokuapp.com/api/v2/disciplines/532038d437c2be0002000005/flow.m3u8");
-//                    vv.setVideoPath("http://rb_vod_universal.redbull.com/i/redbullflow/videos/1395351024.mp4/segment1_0_av.ts?e=b471643725c47acd");
-                    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.start();
-                            Log.d(APP_TAG, "VideoView prepared time:"+System.currentTimeMillis());
-                            Log.i(APP_TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
-                        }
-                    });
-                    vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                        @Override
-                        public boolean onError(MediaPlayer mp, int what, int extra) {
-                            Log.d(APP_TAG, "VideoView error time:"+System.currentTimeMillis());
-                            Log.d(APP_TAG, "player error what[" + what + "] extra[" + extra + "]");
-                            switch(extra) {
-                                case -1010:
-                                    Log.d(APP_TAG, "Unsupported media format");
-                            }
-                            return true;
-                        }
-                    });
+//                    RelativeLayout topView = (RelativeLayout) inflater.inflate(R.layout.video_holder, null);
+//                    VideoView vv = (VideoView) topView.findViewById(R.id.video);
+//                    MediaController controller = new MediaController(mContext);
+//                    vv.setMediaController(controller);
+//                    Log.d(APP_TAG, "VideoView creation time:" + System.currentTimeMillis());
+//                    vv.setVideoPath("http://redbullflow-staging.herokuapp.com/api/v2/disciplines/532038d437c2be0002000005/flow.m3u8");
+////                    vv.setVideoPath("http://rb_vod_universal.redbull.com/i/redbullflow/videos/1395351024.mp4/segment1_0_av.ts?e=b471643725c47acd");
+//                    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            mp.start();
+//                            Log.d(APP_TAG, "VideoView prepared time:"+System.currentTimeMillis());
+//                            Log.i(APP_TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
+//                        }
+//                    });
+//                    vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//                        @Override
+//                        public boolean onError(MediaPlayer mp, int what, int extra) {
+//                            Log.d(APP_TAG, "VideoView error time:"+System.currentTimeMillis());
+//                            Log.d(APP_TAG, "player error what[" + what + "] extra[" + extra + "]");
+//                            switch(extra) {
+//                                case -1010:
+//                                    Log.d(APP_TAG, "Unsupported media format");
+//                            }
+//                            return true;
+//                        }
+//                    });
 
                     View bottomView = new View(mContext);
                     bottomView.setBackgroundColor(Color.rgb(0, 0, 127));
 
+
+
+                    View topView = new View(mContext);
+                    topView.setBackgroundColor(Color.rgb(128, 0, 0));
 //
 //                    LinearLayout bottomView = (LinearLayout) inflater.inflate(R.layout.controll_view, null);
 //
@@ -114,8 +120,8 @@ public class YouTubeLikeActivity extends Activity {
 //                    });
 //
 //
-//                    RelativeLayout topLayout = (RelativeLayout) inflater.inflate(R.layout.surface_holder, null);
-//                    SurfaceView sv = (SurfaceView) topLayout.findViewById(R.id.video);
+//                    RelativeLayout topView = (RelativeLayout) inflater.inflate(R.layout.surface_holder, null);
+//                    SurfaceView sv = (SurfaceView) topView.findViewById(R.id.video);
 //                    final SurfaceHolder sh = sv.getHolder();
 //                    sh.addCallback(new SurfaceHolder.Callback() {
 //                        @Override
@@ -189,15 +195,40 @@ public class YouTubeLikeActivity extends Activity {
 //                        }
 //                    });
 
-//                    View topView = new View(mContext);
-//                    topView.setBackgroundColor(Color.rgb(128,0,0));
 
 
-                    ytOverlay.setTopView(topLayout);
+                    ytOverlay.setTopView(topView);
                     ytOverlay.setBottomView(bottomView);
                     addContentView(ytOverlay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 } else {
                     ytOverlay.backToFullScreen();
+                }
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.yt_show_second);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ytOverlay != null) {
+                    ((ViewGroup)ytOverlay.getParent()).removeView(ytOverlay);
+                    ytOverlay = null;
+                }
+                if(ytOverlaySecond == null) {
+                    ytOverlaySecond = new YTLikeSecond(mContext);
+
+                    View bottomView = new View(mContext);
+                    bottomView.setBackgroundColor(Color.rgb(0, 127, 127));
+
+                    View topView = new View(mContext);
+                    topView.setBackgroundColor(Color.rgb(127, 127, 0));
+
+                    ytOverlaySecond.setTopView(topView);
+                    ytOverlaySecond.setBottomView(bottomView);
+                    addContentView(ytOverlaySecond, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                } else {
+                    ytOverlaySecond.maximize();
                 }
             }
         });

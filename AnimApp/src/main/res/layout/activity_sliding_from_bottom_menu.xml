@@ -10,6 +10,7 @@
     style="@style/AppThemeWithBottomMenu"
     sothree:panelHeight="68dp"
     sothree:shadowHeight="10dp"
+    sothree:dragView="@+id/bottom_menu_header"
     tools:context="com.concisesoftware.myanimationsapplication.animapp.SlidingFromBottomMenuActivity">
 
     <include layout="@layout/sliding_from_bottom_main" />

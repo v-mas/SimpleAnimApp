@@ -31,15 +31,25 @@ public class YTLikeSecond extends FrameLayout {
     private boolean mMaximized = true;
 
     private FrameLayout mTopView;
+    private int mTopViewNormalHeight;
+    private int mTopViewNormalWidth;
+    protected int mTopViewSmallHeight;
+    protected int mTopViewSmallWidth;
+    protected int mTopViewSmallX;
+    protected int mTopViewSmallY;
+
     private FrameLayout mBottomView;
 
     private ViewDragHelper mDragHelper;
-    private int mDragRange;
+    private int mDragRangeY;
+    private int mDragRangeX;
 
     private float mInitialMotionX;
     private float mInitialMotionY;
+
     private boolean mDoCaptureEventUp;
     private boolean mIsUnableToDrag;
+
     private int mScrollTouchSlop;
     private float mSlideOffset;
 
@@ -58,6 +68,7 @@ public class YTLikeSecond extends FrameLayout {
                 } else if (isMaximized()) {
                     dispatchOnMinimized();
                     mMaximized = false;
+                    mBottomView.setVisibility(View.GONE);
                 }
             }
         }
@@ -65,7 +76,10 @@ public class YTLikeSecond extends FrameLayout {
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             Log.d(TAG, "drag position changed t["+top+"] dy["+dy+"]");
-            onChangePosition(top);
+            calculateSlideOffset(top);
+            changeTopView(top);
+            changeBottomView(top + mTopViewNormalHeight);
+            dispatchOnSlide();
             invalidate();
         }
 
@@ -80,13 +94,18 @@ public class YTLikeSecond extends FrameLayout {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             Log.d(TAG, "drag view released");
-            int top = getTop();
-
-            if (yvel > 0 || (yvel == 0 && mSlideOffset > 0.5f)) {
-                top += mDragRange;
+//            int top = getTop();
+//
+//            if (yvel > 0 || (yvel == 0 && mSlideOffset > 0.5f)) {
+//                top += mDragRangeY;
+//            }
+//
+//            mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
+            if(yvel > 0 || (yvel == 0 && mSlideOffset > 0.5f)) {
+                smoothSlideTo(1.0f);
+            } else {
+                smoothSlideTo(0.0f);
             }
-
-            mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
             invalidate();
         }
 
@@ -99,17 +118,17 @@ public class YTLikeSecond extends FrameLayout {
 
         @Override
         public int getViewVerticalDragRange(View child) {
-            return mDragRange;
+            return mDragRangeY;
         }
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             final int topBound = getTop();
-            final int bottomBound = topBound + mDragRange;
-
+            final int bottomBound = mTopViewSmallY;
 
             return Math.min(Math.max(top, topBound), bottomBound);
         }
+
     }
 
     public YTLikeSecond(Context context) {
@@ -149,7 +168,24 @@ public class YTLikeSecond extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        mDragRange = bottom-top - mTopView.getMeasuredHeight();
+        if(mSlideOffset == 0.0f) {
+            mTopViewNormalWidth = mTopView.getMeasuredWidth();
+            mTopViewNormalHeight = mTopView.getMeasuredHeight();
+
+            mTopViewSmallWidth = (int) (0.4f * mTopViewNormalWidth);
+            mTopViewSmallHeight = (int) (0.4f * mTopViewNormalHeight);
+
+            mTopViewSmallX = right-mTopViewSmallWidth-20;
+            mTopViewSmallY = bottom-mTopViewSmallHeight-20;
+
+            mDragRangeX = mTopViewSmallX -left;
+            mDragRangeY = mTopViewSmallY -top;
+        } else {
+            //TODO
+            Log.d(TAG, "onLayout with slideoffset != 0");
+//            mTopViewNormalHeight = (int)(mTopView.getMeasuredHeight() * (1 - mSlideOffset));
+//            mTopViewNormalWidth = (int)(mTopView.getMeasuredWidth() * (1 - mSlideOffset));
+        }
     }
 
     private boolean isInTopView(int x, int y) {
@@ -187,10 +223,9 @@ public class YTLikeSecond extends FrameLayout {
                     mTopView.playSoundEffect(SoundEffectConstants.CLICK);
                     if (!isMaximized()) {
                         maximize();
-                    } else {
-                        minimize();
+                        return true;
                     }
-                    return true;
+                    return false;
                 }
                 return mDoCaptureEventUp;
             }
@@ -215,14 +250,15 @@ public class YTLikeSecond extends FrameLayout {
         final float x = event.getX();
         final float y = event.getY();
         boolean interceptTap = false;
+        boolean isInTopView = isInTopView((int) x, (int) y);
 
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 mIsUnableToDrag = false;
                 mInitialMotionX = x;
                 mInitialMotionY = y;
-                boolean result = isMaximized() || (!isMaximized() && isInTopView((int)mInitialMotionX, (int)mInitialMotionY));
-                mDoCaptureEventUp = result;
+                mDoCaptureEventUp = isMaximized() || (!isMaximized() && isInTopView);
+                interceptTap = (!isMaximized() && isInTopView);
                 break;
             }
 
@@ -241,7 +277,7 @@ public class YTLikeSecond extends FrameLayout {
                     interceptTap = isInTopView((int) x, (int) y);
                 }
 
-                if ((ady > dragSlop && adx > ady) || !isInTopView((int) x, (int) y)) {
+                if ((ady > dragSlop && adx > ady) || !isInTopView) {
                     mDragHelper.cancel();
                     mIsUnableToDrag = true;
                     return false;
@@ -271,6 +307,7 @@ public class YTLikeSecond extends FrameLayout {
 
     public void maximize() {
         if(!isMaximized()) {
+            mBottomView.setVisibility(View.VISIBLE);
             smoothSlideTo(0.0f);
         }
     }
@@ -283,22 +320,42 @@ public class YTLikeSecond extends FrameLayout {
     }
 
     boolean smoothSlideTo(float slideOffset) {
-        int y = (int) (getTop() + slideOffset * mDragRange);
-        Log.d(TAG, "smoothSlide slideOffset["+slideOffset+"] y["+y+"] range["+mDragRange+"]");
+        int y = (int) (getTop() + slideOffset * mDragRangeY);
+        int x = (int) (getLeft() + slideOffset * mDragRangeX);
+        Log.d(TAG, "smoothSlide slideOffset["+slideOffset+"] y["+y+"] x["+x+"]");
 
-        if (mDragHelper.smoothSlideViewTo(mTopView, 0, y)) {
+
+        if (mDragHelper.smoothSlideViewTo(mTopView, x, y)) {
             ViewCompat.postInvalidateOnAnimation(this);
             return true;
         }
         return false;
     }
 
-    private void onChangePosition(int newTop) {
+    private void calculateSlideOffset(int newTop) {
         final int topBound = getTop();
-        mSlideOffset = (float) (newTop - topBound) / mDragRange;
-        dispatchOnSlide();
+        mSlideOffset = (float) (newTop - topBound) / mDragRangeY;
     }
 
+    private void changeTopView(int top) {
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mTopView.getLayoutParams();
+        //size
+        lp.width = (int) (((1.0f-mSlideOffset)*(mTopViewNormalWidth-mTopViewSmallWidth)) + mTopViewSmallWidth);
+        lp.height = (int) (((1.0f-mSlideOffset)*(mTopViewNormalHeight-mTopViewSmallHeight)) + mTopViewSmallHeight);
+        //position
+        lp.topMargin = top;
+        lp.leftMargin = (int)(mSlideOffset * (mTopViewSmallX -getLeft()));
+        mTopView.setLayoutParams(lp);
+    }
+
+    private void changeBottomView(int top) {
+        //positionY
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mBottomView.getLayoutParams();
+        lp.topMargin = top;
+        mBottomView.setLayoutParams(lp);
+        //alpha
+        mBottomView.setAlpha(1-mSlideOffset);
+    }
 
     @Override
     public void computeScroll() {
@@ -306,7 +363,6 @@ public class YTLikeSecond extends FrameLayout {
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
-
 
     private void dispatchOnSlide() {
 //        if (mPanelSlideListener != null) {

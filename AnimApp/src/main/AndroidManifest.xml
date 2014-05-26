@@ -35,6 +35,10 @@
             android:name="com.concisesoftware.myanimationsapplication.animapp.SlidingFromBottomMenuActivity"
             android:label="@string/title_activity_sliding_from_bottom_menu" >
         </activity>
+        <activity
+            android:name="com.concisesoftware.myanimationsapplication.animapp.LayoutAnimationActivity"
+            android:label="@string/title_activity_layout_animation" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

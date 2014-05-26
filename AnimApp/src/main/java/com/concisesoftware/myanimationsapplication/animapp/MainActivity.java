@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
         entries.put("YouTube like draging", YouTubeLikeActivity.class);
         entries.put("Sliding from right", SlideFromRightActivity.class);
         entries.put("Menu form bottom", SlidingFromBottomMenuActivity.class);
+        entries.put("Layout animation", LayoutAnimationActivity.class);
 
 
         ListView listView = ((ListView)this.findViewById(R.id.main_list));

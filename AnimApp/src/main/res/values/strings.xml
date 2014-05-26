@@ -3,10 +3,11 @@
 
     <string name="app_name">MyAnimationsApplication</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_add_child">Dodaj widok</string>
     <string name="title_activity_foldable_activity">Paper fold</string>
     <string name="title_activity_you_tube_like">YouTube looks like</string>
     <string name="title_activity_slide_from_right">Slide in from right</string>
     <string name="title_activity_sliding_from_bottom_menu">Sliding menu from bottom</string>
+    <string name="title_activity_layout_animation">LayoutAnimationActivity</string>
 
 </resources>

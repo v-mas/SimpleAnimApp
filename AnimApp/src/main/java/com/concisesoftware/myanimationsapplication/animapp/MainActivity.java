@@ -2,10 +2,16 @@ package com.concisesoftware.myanimationsapplication.animapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -17,6 +23,57 @@ import java.util.Map;
 
 
 public class MainActivity extends Activity {
+
+    public static Animation flash(final View v, final int color, int singleDuration) {
+        final Drawable oldVDraw = v.getBackground();
+        final Drawable colorDraw = new ColorDrawable(color);
+        final Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                colorDraw.setAlpha((int)(255*(1-interpolatedTime)));
+            }
+            @Override
+            public boolean willChangeBounds() {
+                return false;
+            }
+            @Override
+            public boolean willChangeTransformationMatrix() {
+                return false;
+            }
+        };
+        a.setDuration(singleDuration);
+        a.setRepeatMode(Animation.RESTART);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            final int l = v.getPaddingLeft();
+            final int t = v.getPaddingTop();
+            final int r = v.getPaddingRight();
+            final int b = v.getPaddingBottom();
+            @Override
+            public void onAnimationStart(Animation animation) {
+                LayerDrawable ld = new LayerDrawable(new Drawable[] {
+                        oldVDraw,
+                        colorDraw
+                });
+                v.setBackgroundDrawable(ld);
+                v.setPadding(l, t, r, b);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                colorDraw.setAlpha(0);
+                v.setBackgroundDrawable(oldVDraw);
+                v.setPadding(l, t, r, b);
+            }
+        });
+        Animation old = v.getAnimation();
+        if(old!=null) {
+            old.cancel();
+        }
+        v.startAnimation(a);
+        return a;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +88,7 @@ public class MainActivity extends Activity {
         entries.put("Layout animation", LayoutAnimationActivity.class);
 
 
-        ListView listView = ((ListView)this.findViewById(R.id.main_list));
+        final ListView listView = ((ListView)this.findViewById(R.id.main_list));
         listView.setAdapter(new BaseAdapter() {
             private final ArrayList mData = new ArrayList();
 
@@ -69,6 +126,14 @@ public class MainActivity extends Activity {
                 ((TextView) result.findViewById(android.R.id.text1)).setText(item.getKey());
                 result.setTag(item.getKey());
 
+                result.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.flash(result, Color.rgb(83,172,16), 500);
+                        result.postDelayed(this, 500*getCount());
+                    }
+                }, position*500);
+
                 return result;
             }
         });
@@ -79,6 +144,7 @@ public class MainActivity extends Activity {
                 startActivity(out);
             }
         });
+
     }
 
 }

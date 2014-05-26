@@ -10,18 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.MediaController;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 import com.concisesoftware.myanimationsapplication.animapp.widgets.MyYTLikeLayout;
+import com.concisesoftware.myanimationsapplication.animapp.widgets.YTLikeSecond;
 
 
 public class YouTubeLikeActivity extends Activity {
 
-    private final static String APP_TAG = "YTlike";
+    private final static String TAG = "YTlike";
 
     MyYTLikeLayout ytOverlay;
+    YTLikeSecond ytOverlaySecond;
 
     Context mContext;
 
@@ -40,40 +41,48 @@ public class YouTubeLikeActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(ytOverlaySecond != null) {
+                    ((ViewGroup)ytOverlaySecond.getParent()).removeView(ytOverlaySecond);
+                    ytOverlaySecond = null;
+                }
                 if(ytOverlay == null) {
                     ytOverlay = new MyYTLikeLayout(mContext);
 
-                    RelativeLayout topLayout = (RelativeLayout) inflater.inflate(R.layout.video_holder, null);
-                    VideoView vv = (VideoView) topLayout.findViewById(R.id.video);
-                    MediaController controller = new MediaController(mContext);
-                    vv.setMediaController(controller);
-                    Log.d(APP_TAG, "VideoView creation time:"+System.currentTimeMillis());
-                    vv.setVideoPath("http://redbullflow-staging.herokuapp.com/api/v2/disciplines/532038d437c2be0002000005/flow.m3u8");
-//                    vv.setVideoPath("http://rb_vod_universal.redbull.com/i/redbullflow/videos/1395351024.mp4/segment1_0_av.ts?e=b471643725c47acd");
-                    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.start();
-                            Log.d(APP_TAG, "VideoView prepared time:"+System.currentTimeMillis());
-                            Log.i(APP_TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
-                        }
-                    });
-                    vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                        @Override
-                        public boolean onError(MediaPlayer mp, int what, int extra) {
-                            Log.d(APP_TAG, "VideoView error time:"+System.currentTimeMillis());
-                            Log.d(APP_TAG, "player error what[" + what + "] extra[" + extra + "]");
-                            switch(extra) {
-                                case -1010:
-                                    Log.d(APP_TAG, "Unsupported media format");
-                            }
-                            return true;
-                        }
-                    });
+//                    RelativeLayout topView = (RelativeLayout) inflater.inflate(R.layout.video_holder, null);
+//                    VideoView vv = (VideoView) topView.findViewById(R.id.video);
+//                    MediaController controller = new MediaController(mContext);
+//                    vv.setMediaController(controller);
+//                    Log.d(TAG, "VideoView creation time:" + System.currentTimeMillis());
+//                    vv.setVideoPath("http://redbullflow-staging.herokuapp.com/api/v2/disciplines/532038d437c2be0002000005/flow.m3u8");
+////                    vv.setVideoPath("http://rb_vod_universal.redbull.com/i/redbullflow/videos/1395351024.mp4/segment1_0_av.ts?e=b471643725c47acd");
+//                    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            mp.start();
+//                            Log.d(TAG, "VideoView prepared time:"+System.currentTimeMillis());
+//                            Log.i(TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
+//                        }
+//                    });
+//                    vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//                        @Override
+//                        public boolean onError(MediaPlayer mp, int what, int extra) {
+//                            Log.d(TAG, "VideoView error time:"+System.currentTimeMillis());
+//                            Log.d(TAG, "player error what[" + what + "] extra[" + extra + "]");
+//                            switch(extra) {
+//                                case -1010:
+//                                    Log.d(TAG, "Unsupported media format");
+//                            }
+//                            return true;
+//                        }
+//                    });
 
                     View bottomView = new View(mContext);
                     bottomView.setBackgroundColor(Color.rgb(0, 0, 127));
 
+
+
+                    View topView = new View(mContext);
+                    topView.setBackgroundColor(Color.rgb(128, 0, 0));
 //
 //                    LinearLayout bottomView = (LinearLayout) inflater.inflate(R.layout.controll_view, null);
 //
@@ -108,14 +117,14 @@ public class YouTubeLikeActivity extends Activity {
 //                        public void onStopTrackingTouch(SeekBar seekBar) {
 //                            if(player != null && isPrepared) {
 //                                player.seekTo(seekBar.getProgress()*1000);
-//                                Log.d(APP_TAG, "seek to " + seekBar.getProgress() + "s");
+//                                Log.d(TAG, "seek to " + seekBar.getProgress() + "s");
 //                            }
 //                        }
 //                    });
 //
 //
-//                    RelativeLayout topLayout = (RelativeLayout) inflater.inflate(R.layout.surface_holder, null);
-//                    SurfaceView sv = (SurfaceView) topLayout.findViewById(R.id.video);
+//                    RelativeLayout topView = (RelativeLayout) inflater.inflate(R.layout.surface_holder, null);
+//                    SurfaceView sv = (SurfaceView) topView.findViewById(R.id.video);
 //                    final SurfaceHolder sh = sv.getHolder();
 //                    sh.addCallback(new SurfaceHolder.Callback() {
 //                        @Override
@@ -130,7 +139,7 @@ public class YouTubeLikeActivity extends Activity {
 //                            player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 //                                @Override
 //                                public boolean onError(MediaPlayer mp, int what, int extra) {
-//                                    Log.d(APP_TAG, "player error what:[" + what + "] extra:[" + extra + "]");
+//                                    Log.d(TAG, "player error what:[" + what + "] extra:[" + extra + "]");
 //                                    return true;
 //                                }
 //                            });
@@ -141,7 +150,7 @@ public class YouTubeLikeActivity extends Activity {
 //                                    mp.start();
 //                                    ctrlBtn.setText("Pause");
 //                                    ctrlBtn.setEnabled(true);
-//                                    Log.i(APP_TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
+//                                    Log.i(TAG, "Video prepared: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
 //                                }
 //                            });
 //                            player.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
@@ -154,13 +163,13 @@ public class YouTubeLikeActivity extends Activity {
 //                                    } else {
 //                                        seekBar.setEnabled(false);
 //                                    }
-//                                    Log.i(APP_TAG, "Video size changed: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
+//                                    Log.i(TAG, "Video size changed: height["+mp.getVideoHeight()+"] width["+mp.getVideoWidth()+"] duration["+mp.getDuration()+"]");
 //                                }
 //                            });
 //                            player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
 //                                @Override
 //                                public void onBufferingUpdate(MediaPlayer mp, int percent) {
-//                                    Log.d(APP_TAG, "buffer update: percent["+percent+"]");
+//                                    Log.d(TAG, "buffer update: percent["+percent+"]");
 //                                }
 //                            });
 //                            try {
@@ -189,15 +198,53 @@ public class YouTubeLikeActivity extends Activity {
 //                        }
 //                    });
 
-//                    View topView = new View(mContext);
-//                    topView.setBackgroundColor(Color.rgb(128,0,0));
 
 
-                    ytOverlay.setTopView(topLayout);
+                    ytOverlay.setTopView(topView);
                     ytOverlay.setBottomView(bottomView);
                     addContentView(ytOverlay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 } else {
                     ytOverlay.backToFullScreen();
+                }
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.yt_show_second);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ytOverlay != null) {
+                    ((ViewGroup)ytOverlay.getParent()).removeView(ytOverlay);
+                    ytOverlay = null;
+                }
+                if(ytOverlaySecond == null) {
+                    ytOverlaySecond = new YTLikeSecond(mContext);
+
+                    View bottomView = new View(mContext);
+                    bottomView.setBackgroundColor(Color.rgb(0, 127, 127));
+
+                    RelativeLayout topView = new RelativeLayout(mContext);
+                    topView.setBackgroundColor(Color.rgb(127, 127, 0));
+
+                    Button buttonOnTop = new Button(mContext);
+                    buttonOnTop.setText("minimize");
+                    buttonOnTop.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(ytOverlaySecond!=null) {
+                                Log.d(TAG, "clicked button on top view");
+                                ytOverlaySecond.minimize();
+                            }
+                        }
+                    });
+                    topView.addView(buttonOnTop, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                    ytOverlaySecond.setTopView(topView);
+                    ytOverlaySecond.setBottomView(bottomView);
+                    addContentView(ytOverlaySecond, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                } else {
+                    ytOverlaySecond.maximize();
                 }
             }
         });
